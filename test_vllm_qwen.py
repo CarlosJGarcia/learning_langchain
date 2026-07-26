@@ -1,4 +1,7 @@
+from rich.console import Console
 from langchain_openai import ChatOpenAI
+
+console = Console()
 
 # Connect LangChain to your local vLLM container
 llm = ChatOpenAI(
@@ -10,8 +13,8 @@ llm = ChatOpenAI(
 
 # Test the connection
 query = "Hello, who are you?"
-print(f"Question: {query}")
+print(f"\nQuestion: {query}")
 
 response = llm.invoke("Hello, who are you?")
-print(f"Answer: {response.content}")
+console.print(f"Answer: {response.content}", style="white")
 print()
