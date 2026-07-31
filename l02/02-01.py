@@ -1,4 +1,6 @@
 # Competency 2.1 Running Your First Pre-Built Agent
+# Este programa desarrollado en Python con LangChain es un AI Agent
+# Este AI Agent usa el patrón de arquitectura ReAct Loop 
 
 import os
 from rich.console import Console
@@ -36,6 +38,13 @@ def get_weather(location: str) -> str:
 #Helper function to ask the agent a question and print the answer.
 def ask_agent(question: str):
     
+    # agent.invoke hace dos cosas:
+    # - Construye un fichero JSON en formato OpenAI describiendo cada una de las herramientas disponibles (en teste caso, get_weather)
+    # - Hace una llamada al LLM pasando como parámetro la query y la lista de herramientas
+    # - El LLM, que ha sido fine-tuned para entender este JSON de OpenAI, responde con otro JSON para que se ejecute la herramienta
+    # - agent.invoke ejecuta el código Python de la herramienta, recoge el resultado y se lo devuelve al LLM en otro JSON de formato OpenAI
+    # - El LLM parsea, ese nuevo JSON y junto con la información de contexto, calcula la frase de respuesta, que envia de vuelta
+    # - agent.invoke devuelve el resultado al agente AI (este código)
     result = agent.invoke({"messages": [{"role": "user", "content": question}]})
 
     # Extract and print the final answer
