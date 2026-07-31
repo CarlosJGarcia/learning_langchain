@@ -68,5 +68,10 @@ query = "weather in tokio today?"
 print(query)
 ask_agent(query)
 
+query = "weather in pamplona today?"
+print(query)
+ask_agent(query)
+
+
 print()
 
