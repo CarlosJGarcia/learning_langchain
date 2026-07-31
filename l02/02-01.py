@@ -8,7 +8,7 @@ from langchain_core.tools import tool
 
 
 # Define a tool for the pre-built agent
-# Mock implementation - in production, call a real weather API
+# Mock implementation - in production, this function would call a real weather API
 @tool
 def get_weather(location: str) -> str:
     """Get current weather for a location.
@@ -67,11 +67,12 @@ agent = create_agent(model, tools=[get_weather])
 query = "weather in tokio today?"
 print(query)
 ask_agent(query)
+print()
 
 query = "weather in pamplona today?"
 print(query)
 ask_agent(query)
-
-
 print()
+
+
 
