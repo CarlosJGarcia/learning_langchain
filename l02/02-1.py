@@ -6,7 +6,6 @@ from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 
-# from langchain_core.messages import HumanMessage, SystemMessage
 
 # Define a tool for the pre-built agent
 # Mock implementation - in production, call a real weather API
@@ -21,9 +20,9 @@ def get_weather(location: str) -> str:
         A string describing the current weather conditions, or a message if data is not available
     """    
     weather_data = {
-        "New York": "Sunny, 72°F",
-        "London": "Cloudy, 59°F",
-        "Tokyo": "Clear, 68°F",
+        "new york": "Sunny, 22°C",
+        "london": "Cloudy, 19°C",
+        "tokyo": "Clear, 18°C",
     }
 
     location_key = location.lower().strip()
@@ -41,7 +40,7 @@ def ask_agent(question: str):
 
     # Extract and print the final answer
     final_message = result["messages"][-1]
-    print(final_message.content)
+    console.print(final_message.content, style="white", highlight=False)
 
 
 console = Console()
@@ -60,26 +59,14 @@ TEMPERATURE = 0.1
 MAX_TOKENS = 2048
 
 
-
-
-
-
-
-
 # Connect LangChain to your Qwen3.6 on vLLM
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
 # Initialize agent and execute agent flow (ReAct Loop)
 agent = create_agent(model, tools=[get_weather])
-#result = agent.invoke({"messages": [{"role": "user", "content": "..."}]})
-
-ask_agent("What's the weather in Tokio today?")
-
-# Test the connection
-# query = "Hello, who are you?"
-# print(f"\n1. Question: {query}")
-# response = model.invoke(query)
-# console.print(f"Answer: {response.content}", style="white")
+query = "weather in tokio today?"
+print(query)
+ask_agent(query)
 
 print()
 
