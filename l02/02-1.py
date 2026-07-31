@@ -9,13 +9,17 @@ from langchain_core.tools import tool
 # from langchain_core.messages import HumanMessage, SystemMessage
 
 # Define a tool for the pre-built agent
-# Get current weather for a location
-# Args: location: The city or location to get weather for
-# Returns: A string describing the current weather conditions, or a message if data is not available
 # Mock implementation - in production, call a real weather API
 @tool
 def get_weather(location: str) -> str:
+    """Get current weather for a location.
+    
+    Args:
+        location: The city or location to get weather for
         
+    Returns:
+        A string describing the current weather conditions, or a message if data is not available
+    """    
     weather_data = {
         "New York": "Sunny, 72°F",
         "London": "Cloudy, 59°F",
