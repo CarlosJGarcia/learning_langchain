@@ -4,8 +4,6 @@ from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
 from langchain.agents import create_agent
 
-# from dotenv import load_dotenv
-
 #Helper function for search
 def generate_and_print_response(agent, query):
     """
@@ -35,11 +33,7 @@ def generate_and_print_response(agent, query):
 # LLM Variables
 server_fqdn = os.getenv("VLLM_SERVER_FQDN")
 if not server_fqdn:
-    raise ValueError(
-        "Configuration Error: 'VLLM_SERVER_FQDN' environment variable is not set.\n"
-        "Please set it in your Ubuntu terminal using:\n"
-        "export VLLM_SERVER_FQDN='server.domain.com'"
-    )
+    raise ValueError("Configuration Error: 'VLLM_SERVER_FQDN' environment variable is not set.\n")
 openai_api_base = f"http://{server_fqdn}:8000/v1"
 
 MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"

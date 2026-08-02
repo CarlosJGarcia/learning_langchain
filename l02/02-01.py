@@ -68,7 +68,7 @@ TEMPERATURE = 0.1
 MAX_TOKENS = 2048
 
 
-# Connect LangChain to your Qwen3.6 on vLLM
+# Load model (Qwen3.6 on vLLM)
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
 # Initialize agent and execute agent flow (ReAct Loop)

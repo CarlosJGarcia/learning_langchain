@@ -2,16 +2,32 @@ import os
 from rich.console import Console
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
+from langchain_community.tools import WikipediaQueryRun, WikipediaAPIWrapper
+
+def create_wikipedia_tool():
+    """
+    Create a Wikipedia search tool for querying encyclopedic information.
+    
+    The tool should be configured with:
+    - top_k_results: 3 (return top 3 Wikipedia articles)
+    - doc_content_chars_max: 2000 (limit content length per result)
+    
+    Returns:
+        WikipediaQueryRun: A configured Wikipedia search tool instance
+    
+    Hint: WikipediaQueryRun takes an api_wrapper parameter 
+    """
+    # Create the Wikipedia API wrapper
+    api_wrapper = WikipediaAPIWrapper(top_k_results=3, doc_content_chars_max=2000)
+
+    # Create and return the Wikipedia search tool
+    return WikipediaQueryRun(api_wrapper=api_wrapper)
 
 
 # LLM Variables
 server_fqdn = os.getenv("VLLM_SERVER_FQDN")
 if not server_fqdn:
-    raise ValueError(
-        "Configuration Error: 'VLLM_SERVER_FQDN' environment variable is not set.\n"
-        "Please set it in your Ubuntu terminal using:\n"
-        "export VLLM_SERVER_FQDN='server.domain.com'"
-    )
+    raise ValueError("Configuration Error: 'VLLM_SERVER_FQDN' environment variable is not set.\n")
 openai_api_base = f"http://{server_fqdn}:8000/v1"
 
 MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"
@@ -34,7 +50,7 @@ model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", mode
 #agent = create_agent(model=model, tools=[search_tool])
 
 console.print("\nAPI keys loaded", style="gold1")
-console.print(f"Model configured: {model.model_name}", style="gold1", highlight=False)
+console.print(f"Model configured: {model.model_name}\n", style="gold1", highlight=False)
 #console.print(f"Tavily search configured: {search_tool.name}", style="gold1")
 #console.print("Agent created\n", style="gold1")
 
