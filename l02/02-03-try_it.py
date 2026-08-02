@@ -2,7 +2,11 @@ import os
 from rich.console import Console
 from langchain_openai import ChatOpenAI
 from langchain.agents import create_agent
-from langchain_community.tools import WikipediaQueryRun, WikipediaAPIWrapper
+
+import warnings
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+from langchain_community.tools import WikipediaQueryRun
+from langchain_community.utilities import WikipediaAPIWrapper
 
 def create_wikipedia_tool():
     """
