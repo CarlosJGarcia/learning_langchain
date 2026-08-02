@@ -1,10 +1,11 @@
 import os
 from rich.console import Console
 from langchain_openai import ChatOpenAI
+from langchain_tavily import TavilySearch
 
 # from dotenv import load_dotenv
 # from langchain.agents import create_agent
-# from langchain_tavily import TavilySearch
+
 
 
 # LLM Variables
@@ -33,8 +34,14 @@ if not os.getenv("TAVILY_API_KEY"):
 # Load model (Qwen3.6 on vLLM)
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
+# Instantiate Tavily search tool
+search_tool = TavilySearch(max_results=5, search_depth="basic", include_raw_content=False, include_images=False)
+
+
+
 
 console.print("\nAPI keys loaded", style="gold1")
-console.print(f"Model configured: {model.model_name}\n", style="gold1")
+console.print(f"Model configured: {model.model_name}", style="gold1", highlight=False)
+console.print(f"Tavily search configured: {search_tool.name}, {search_tool.description}\n", style="gold1")
 
 
