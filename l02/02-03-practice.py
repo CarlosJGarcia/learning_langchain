@@ -2,10 +2,34 @@ import os
 from rich.console import Console
 from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
+from langchain.agents import create_agent
 
 # from dotenv import load_dotenv
-# from langchain.agents import create_agent
 
+#Helper function for search
+def generate_and_print_response(agent, query):
+    """
+    Invoke the agent with a query and print the response.
+    
+    Args:
+        agent: The LangChain agent instance
+        query: The user query string
+    """
+    print(f"\n{'='*60}")
+    print(f"Query: {query}")
+    print(f"{'='*60}\n")
+    
+    # Invoke the agent with the query
+    result = agent.invoke({
+        "messages": [{"role": "user", "content": query}]
+    })
+    
+    # Extract and print the final response
+    final_message = result["messages"][-1]
+    
+    console.print(f"Response: {final_message.content}", style="white", highlight=False)
+    
+    return result
 
 
 # LLM Variables
@@ -37,11 +61,17 @@ model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", mode
 # Instantiate Tavily search tool
 search_tool = TavilySearch(max_results=5, search_depth="basic", include_raw_content=False, include_images=False)
 
-
-
+# Create the agent with the search tool
+agent = create_agent(model=model, tools=[search_tool])
 
 console.print("\nAPI keys loaded", style="gold1")
 console.print(f"Model configured: {model.model_name}", style="gold1", highlight=False)
-console.print(f"Tavily search configured: {search_tool.name}, {search_tool.description}\n", style="gold1")
+console.print(f"Tavily search configured: {search_tool.name}", style="gold1")
+console.print("Agent created\n", style="gold1")
+
+
+# Test the AI Agent
+result1 = generate_and_print_response(agent, "What are the latest developments in artificial intelligence in 2026?")
+
 
 
