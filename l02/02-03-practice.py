@@ -34,7 +34,7 @@ if not os.getenv("TAVILY_API_KEY"):
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
 
-print("\nAPI keys loaded")
-print(f"Model configured: {model.model_name}\n")
+console.print("\nAPI keys loaded", style="gold1")
+console.print(f"Model configured: {model.model_name}\n", style="gold1")
 
 
