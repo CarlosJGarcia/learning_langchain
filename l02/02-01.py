@@ -1,6 +1,6 @@
 # Competency 2.1 Running Your First Pre-Built Agent
-# Este programa desarrollado en Python con LangChain es un AI Agent
-# Este AI Agent usa el patrón de arquitectura ReAct Loop 
+# AI Agent developed using LangChain
+# AI Agent architecture pattern: ReAct Loop 
 
 import os
 from rich.console import Console
@@ -9,7 +9,7 @@ from langchain.agents import create_agent
 from langchain_core.tools import tool
 
 
-# Define a tool for the pre-built agent
+# Define a tool for the Agent
 # Mock implementation - in production, this function would call a real weather API
 @tool
 def get_weather(location: str) -> str:
@@ -54,6 +54,7 @@ def ask_agent(question: str):
 
 console = Console()
 
+# Define model settings (Qwen3.6 on vLLM)
 server_fqdn = os.getenv("VLLM_SERVER_FQDN")
 if not server_fqdn:
     raise ValueError(
@@ -62,7 +63,6 @@ if not server_fqdn:
         "export VLLM_SERVER_FQDN='server.domain.com'"
     )
 openai_api_base = f"http://{server_fqdn}:8000/v1"
-
 MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"
 TEMPERATURE = 0.1
 MAX_TOKENS = 2048
@@ -71,13 +71,27 @@ MAX_TOKENS = 2048
 # Load model (Qwen3.6 on vLLM)
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS, temperature=TEMPERATURE)
 
-# Initialize agent and execute agent flow (ReAct Loop)
+# Initialize agent 
 agent = create_agent(model, tools=[get_weather])
+
+# create_agent() from langchain.agents Internally implements a ReAct loop.
+# When agent.invoke() is called from ask_agent() the agent runs an internal loop of:
+#   - Think: the LLM reasons about what to do
+#   - Act: calls a tool (e.g., get_weather)
+#   - Observe: receives the tool's result
+#   - Loops back to Think until it produces a final answer
+# There is no need for a for/while loop in the Python code, the looping behavior is encapsulated inside the agent.
+# A ReAct Chain (linear) would require to manually implement the think→act→observe steps in the Python code.
+# The ReAct Loop delegates the iteration to the agent framework
+
+
+# Agent flow (ReAct Loop) positive case
 query = "weather in tokio today?"
 print(query)
 ask_agent(query)
 print()
 
+# Agent flow (ReAct Loop) negative case
 query = "weather in pamplona today?"
 print(query)
 ask_agent(query)
