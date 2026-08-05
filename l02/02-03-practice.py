@@ -1,5 +1,21 @@
 import os
+import ssl
+import urllib3
+import requests
 from rich.console import Console
+
+# HTTPS -> HTTP for Tavily and LangChain to prevent Corporate HTTP Proxy issues
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+ssl._create_default_https_context = ssl._create_unverified_context
+os.environ['CURL_CA_BUNDLE'] = ""
+os.environ['REQUESTS_CA_BUNDLE'] = ""
+original_request = requests.Session.request
+def unverified_request(self, *args, **kwargs):
+    kwargs['verify'] = False
+    return original_request(self, *args, **kwargs)
+requests.Session.request = unverified_request
+
+
 from langchain_openai import ChatOpenAI
 from langchain_tavily import TavilySearch
 from langchain.agents import create_agent
@@ -13,14 +29,12 @@ def generate_and_print_response(agent, query):
         agent: The LangChain agent instance
         query: The user query string
     """
-    print(f"\n{'='*60}")
-    print(f"Query: {query}")
-    print(f"{'='*60}\n")
+
+    # Print the query
+    print(query)
     
     # Invoke the agent with the query
-    result = agent.invoke({
-        "messages": [{"role": "user", "content": query}]
-    })
+    result = agent.invoke({"messages": [{"role": "user", "content": query}]})
     
     # Extract and print the final response
     final_message = result["messages"][-1]
@@ -62,6 +76,16 @@ console.print("\nAPI keys loaded", style="gold1")
 console.print(f"Model configured: {model.model_name}", style="gold1", highlight=False)
 console.print(f"Tavily search configured: {search_tool.name}", style="gold1")
 console.print("Agent created\n", style="gold1")
+
+
+# Test Tavily
+# console.print("\n--- Testing Tavily Directly ---", style="cyan")
+# try:
+#    # We pass a dictionary with the expected 'query' argument
+#    test_result = search_tool.invoke({"query": "Latest AI developments 2026"})
+#    console.print(test_result)
+# except Exception as e:
+#    console.print(f"Tavily crashed! Error: {e}", style="red")
 
 
 # Test the AI Agent
