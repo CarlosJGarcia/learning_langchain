@@ -49,7 +49,8 @@ def ask_agent(question: str):
 
     # Extract and print the final answer
     final_message = result["messages"][-1]
-    console.print(final_message.content, style="white", highlight=False)
+    clean_message = final_message.content.strip()                 # Remove trailing \n in the LLM response
+    console.print(clean_message, style="white", highlight=False)
 
 
 console = Console()
@@ -86,13 +87,13 @@ agent = create_agent(model, tools=[get_weather])
 
 
 # Agent flow (ReAct Loop) positive case
-query = "weather in tokio today?"
-print(query)
+query = "What's the weather like in tokio today?"
+print(f"\n{query}")
 ask_agent(query)
 print()
 
 # Agent flow (ReAct Loop) negative case
-query = "weather in pamplona today?"
+query = "What's the weather like in pamplona today?"
 print(query)
 ask_agent(query)
 print()
