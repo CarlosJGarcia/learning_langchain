@@ -35,6 +35,25 @@ def generate_and_print_response(agent, query):
     
     # Invoke the agent with the query
     result = agent.invoke({"messages": [{"role": "user", "content": query}]})
+
+    # DEBUG START
+    """
+    console.print("\n--- Agent Internal Monologue ---", style="magenta")
+    for msg in result["messages"]:
+        msg_type = msg.__class__.__name__
+        
+        # If the model made a tool call, print it
+        if hasattr(msg, "tool_calls") and msg.tool_calls:
+            console.print(f"[{msg_type}] Tool Call Requested: {msg.tool_calls}", style="yellow")
+            
+        # Print the content of the message (truncate tool results slightly for readability)
+        content = str(msg.content)
+        if len(content) > 500 and msg_type == "ToolMessage":
+            content = content[:500] + "... [TRUNCATED]"
+            
+        console.print(f"[{msg_type}]: {content}\n", style="white")
+    """
+    # DEBUG END
     
     # Extract and print the final response
     final_message = result["messages"][-1]
@@ -79,16 +98,17 @@ console.print("Agent created\n", style="gold1")
 
 
 # Test Tavily
-# console.print("\n--- Testing Tavily Directly ---", style="cyan")
-# try:
+"""
+console.print("\n--- Testing Tavily Directly ---", style="cyan")
+try:
 #    # We pass a dictionary with the expected 'query' argument
-#    test_result = search_tool.invoke({"query": "Latest AI developments 2026"})
-#    console.print(test_result)
-# except Exception as e:
-#    console.print(f"Tavily crashed! Error: {e}", style="red")
+    test_result = search_tool.invoke({"query": "Latest AI developments 2026"})
+    console.print(test_result)
+except Exception as e:
+    console.print(f"Tavily crashed! Error: {e}", style="red")
+"""
 
-
-# Test the AI Agent
+# Run the AI Agent
 result1 = generate_and_print_response(agent, "What are the latest developments in artificial intelligence in 2026?")
 
 
