@@ -2,10 +2,12 @@
 import os
 from rich.console import Console
 
+# For LLM interface
 from langchain_openai.llms import OpenAI
 
-# from langchain_openai import ChatOpenAI
-# from langchain_core.messages import HumanMessage, SystemMessage
+# For Chat interface
+from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_openai.chat_models import ChatOpenAI
 
 
 console = Console()
@@ -29,6 +31,21 @@ print()
 print(question)
 console.print(response, style="white")
 print()
+
+
+# Chat Interface: Send a question and get a response / # Qwen3.6 on vLLM
+model = ChatOpenAI(openai_api_base=openai_api_base, model=MODEL_NAME, max_tokens=MAX_TOKENS)
+
+
+system_msg = SystemMessage('''You are a helpful assistant that responds to questions with three exclamation marks.''')
+question = HumanMessage('What is the capital of France?')
+response = model.invoke([system_msg, question])
+print()
+print(question)
+console.print(response, style="white")
+print()
+
+
 
 
 """
