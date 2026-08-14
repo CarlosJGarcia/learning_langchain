@@ -21,28 +21,29 @@ if not server_fqdn:
 openai_api_base = f"http://{server_fqdn}:8000/v1"
 
 MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"
-MAX_TOKENS = 2048
+
 
 # LLM Interface: Send a question and get a response / # Qwen3.6 on vLLM
+MAX_TOKENS = 25
 model = OpenAI(openai_api_base=openai_api_base, model=MODEL_NAME, max_tokens=MAX_TOKENS)
 question = "The sky is"
 response = model.invoke(question)
 print()
 print(question)
-console.print(response, style="white")
+console.print(response, style="white", highlight=False)
 print()
 
 
-# Chat Interface: Send a question and get a response / # Qwen3.6 on vLLM
+# Chat Interface: Allows to have a dialogue / # Qwen3.6 on vLLM
+MAX_TOKENS = 1024
 model = ChatOpenAI(openai_api_base=openai_api_base, model=MODEL_NAME, max_tokens=MAX_TOKENS)
-
-
-system_msg = SystemMessage('''You are a helpful assistant that responds to questions with three exclamation marks.''')
-question = HumanMessage('What is the capital of France?')
+system_msg = SystemMessage("You are a helpful assistant that responds to questions with three exclamation marks.")
+question = HumanMessage("What is the capital of France?")
 response = model.invoke([system_msg, question])
 print()
+console.print(system_msg, style="blue", highlight=False)
 print(question)
-console.print(response, style="white")
+console.print(response.content, style="white", highlight=False)
 print()
 
 
