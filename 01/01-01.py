@@ -17,11 +17,21 @@ if not server_fqdn:
         "export VLLM_SERVER_FQDN='server.domain.com'"
     )
 openai_api_base = f"http://{server_fqdn}:8000/v1"
-MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"
 
-"""
+MODEL_NAME = "nvidia/Qwen3.6-35B-A3B-NVFP4"
 MAX_TOKENS = 2048
 
+# LLM Interface: Send a question and get a response / # Qwen3.6 on vLLM
+model = OpenAI(openai_api_base=openai_api_base, model=MODEL_NAME, max_tokens=MAX_TOKENS)
+question = "The sky is"
+response = model.invoke(question)
+print()
+print(question)
+console.print(response, style="white")
+print()
+
+
+"""
 # Connect LangChain to your Qwen3.6 on vLLM
 model = ChatOpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model_name=MODEL_NAME, max_tokens=MAX_TOKENS)
 
@@ -50,20 +60,5 @@ print()
 
 
 
-model = OpenAI(model="gpt-3.5-turbo")
-
-# Connect LangChain to your Qwen3.6 on vLLM
-model = OpenAI(openai_api_base=openai_api_base, model=MODEL_NAME)
-#model = OpenAI(openai_api_base=openai_api_base, openai_api_key="EMPTY", model=MODEL_NAME, max_tokens=MAX_TOKENS)
 
 
-
-
-
-question = "The sky is"
-response = model.invoke(question)
-
-print()
-print(question)
-console.print(response, style="white")
-print()
